@@ -57,6 +57,10 @@ CHANNELS = [
         "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=ID_DE_ANDRES_DIRECTOS"
     },
     {
+        "name": "DoctorCrypto", 
+        "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbVIsFH23kSc_K4qRN3NIsw"
+    },
+    {
         "name": "Alex Morian", 
         "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=ID_DE_ALEX_MORIAN"
     }
