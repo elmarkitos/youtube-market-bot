@@ -36,38 +36,19 @@ LOW_RES = True             # resolución baja = menos tokens (vale para vídeos 
 
 client = genai.Client(api_key=GEMINI_KEY)
 
-# ---------------------------------------------------------------------------
-# Tu cartera y lista de seguimiento
-# ---------------------------------------------------------------------------
-PORTFOLIO = [
-    "Nike (NKE)",
-    "Take-Two Interactive (TTWO)",
-    "Apple (AAPL)",
-    "CorMedix (CRMD)",
-    "Advanced Micro Devices (AMD)",
-    "Ethereum (ETH)",
-    "Amper (AMP)",
-    "Bitcoin (BTC)",
-    "Tesla (TSLA)",
-    "Xiaomi (XIACF)",
-    "Wizz Air (WIZZ)",
-    "Novavax (NVAX)",
-    "Oro (Gold)",
-    "Plata (Silver)",
-    "Uranio (Uranium)",
-    "iShares MSCI World Small Cap UCITS ETF (IE000ZYRH0Q7)",
-    "Pictet China Index (LU0625737910)",
-    "iShares Developed World Index Fund (IE000QAZP7L2)",
-    "Horos Value Internacional (ES0146309002)",
-    "MyInvestor Value C (ES0165243025)",
-]
+PORTFOLIO_FILE = os.path.join(BASE_DIR, "portfolio.json")
 
-WATCHLIST = [
-    "Solana (SOL)",
-    "Nextil (NXT)",
-    "Mersen (MRN)",
-    "International Airlines Group (IAG)",
-]
+def load_portfolio_data():
+    if os.path.exists(PORTFOLIO_FILE):
+        try:
+            with open(PORTFOLIO_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data.get("portfolio", []), data.get("watchlist", [])
+        except Exception as e:
+            print(f"Error leyendo portfolio.json: {e}")
+    return [], []
+
+PORTFOLIO, WATCHLIST = load_portfolio_data()
 
 # ---------------------------------------------------------------------------
 # Canales (RSS por channel_id). Añade o quita los que quieras.
@@ -75,13 +56,25 @@ WATCHLIST = [
 def rss(channel_id: str) -> str:
     return f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
 
-CHANNELS = [
-    {"name": "CryptoBruj", "rss": rss("UChYI1ptK3fy06LzLnwsm8pA")},
-    {"name": "La Pizarra de Andrés", "rss": rss("UCEXbEm8RUvRkKUEo2RjKd9w")},
-    {"name": "Andrés Directos", "rss": rss("UCDpE0dCtPTJZKAr8psiAHQw")},
-    {"name": "DoctorCrypto", "rss": rss("UCbVIsFH23kSc_K4qRN3NIsw")},
-    {"name": "Alex Morian", "rss": rss("UCMEjDaKtg8bQPq726HiV9Ww")},
-]
+CHANNELS_FILE = os.path.join(BASE_DIR, "channels.json")
+
+def load_channels():
+    if os.path.exists(CHANNELS_FILE):
+        try:
+            with open(CHANNELS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return [
+                    {
+                        "name": ch["name"],
+                        "rss": f"https://www.youtube.com/feeds/videos.xml?channel_id={ch['channel_id']}"
+                    }
+                    for ch in data
+                ]
+        except Exception as e:
+            print(f"Error leyendo channels.json: {e}")
+    return []
+
+CHANNELS = load_channels()
 
 # ---------------------------------------------------------------------------
 # Historial (para no repetir vídeos)

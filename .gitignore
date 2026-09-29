@@ -1,4 +1,5 @@
 venv/
 .env
 __pycache__/
-cookies.txt
+portfolio.json
+channels.json
